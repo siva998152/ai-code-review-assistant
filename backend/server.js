@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 
+const healthRoutes = require("./routes/healthRoutes");
+
 dotenv.config();
 
 const app = express();
@@ -16,6 +18,8 @@ app.get("/", (req, res) => {
     message: "AI Code Review Assistant API is running",
   });
 });
+
+app.use("/api/health", healthRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
