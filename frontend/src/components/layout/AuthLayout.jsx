@@ -3,57 +3,66 @@ import { CheckCircle2 } from "lucide-react";
 
 function AuthLayout({ children }) {
   return (
-   <div className="mt-12 space-y-8">
+    <div className="h-screen bg-gradient-to-br from-slate-100 via-blue-50 to-slate-200 overflow-hidden">
 
-  <Feature
-    title="Detect Bugs & Errors"
-    description="Find syntax errors, runtime issues, and coding mistakes before deployment."
-  />
+      <div className="mx-auto h-full max-w-7xl px-12">
 
-  <Feature
-    title="AI-Powered Code Review"
-    description="Receive intelligent suggestions to improve code quality and maintainability."
-  />
+        <div className="grid h-full lg:grid-cols-2 items-center gap-24">
 
-  <Feature
-    title="Security Analysis"
-    description="Identify insecure coding patterns and common JavaScript vulnerabilities."
-  />
+          {/* LEFT */}
 
-  <Feature
-    title="Performance Optimization"
-    description="Discover opportunities to improve execution speed and efficiency."
-  />
+          <div>
 
-  <Feature
-    title="Best Practices"
-    description="Follow clean coding standards and industry-recommended JavaScript conventions."
-  />
+            <Logo />
+
+            <div className="mt-12 space-y-5">
+
+              <Feature text="Detect Bugs & Errors" />
+
+              <Feature text="AI-Powered Code Review" />
+
+              <Feature text="Security Analysis" />
+
+              <Feature text="Performance Optimization" />
+
+              <Feature text="Best Practices" />
+
+            </div>
+
+            <p className="mt-10 text-slate-500 italic">
+              Trusted by developers to write cleaner, safer and faster JavaScript.
+            </p>
+
+          </div>
+
+          {/* RIGHT */}
+
+          <div className="flex justify-center">
+
+            {children}
+
+          </div>
+
+        </div>
+
+      </div>
 
     </div>
   );
 }
 
-function Feature({ title, description }) {
+function Feature({ text }) {
   return (
-    <div className="flex gap-4">
+    <div className="flex items-center gap-4">
 
       <CheckCircle2
-        className="text-green-600 mt-1 flex-shrink-0"
         size={22}
+        className="text-green-600"
       />
 
-      <div>
-
-        <h3 className="font-semibold text-slate-800 text-lg">
-          {title}
-        </h3>
-
-        <p className="text-slate-600 mt-1 leading-6">
-          {description}
-        </p>
-
-      </div>
+      <span className="text-xl font-medium text-slate-800">
+        {text}
+      </span>
 
     </div>
   );

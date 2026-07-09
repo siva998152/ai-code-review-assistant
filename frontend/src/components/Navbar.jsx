@@ -1,4 +1,18 @@
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+
 function Navbar() {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    toast.success("Logged out successfully");
+
+    navigate("/login");
+  };
+
   return (
     <nav
       style={{
@@ -14,6 +28,8 @@ function Navbar() {
       <h2>AI Code Review Assistant</h2>
 
       <button
+        type="button"
+        onClick={handleLogout}
         style={{
           padding: "10px 20px",
           cursor: "pointer",
