@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import Editor from "@monaco-editor/react";
+import { analyzeCode } from "../services/reviewService";
 import {
   ClipboardPaste,
   Upload,
@@ -17,7 +18,7 @@ function hello() {
 }
 `;
 
-function CodeEditor() {
+function CodeEditor({ onAnalysisComplete }) {
   const [code, setCode] = useState(DEFAULT_CODE);
   const [inputMode, setInputMode] = useState("paste");
   const [fileName, setFileName] = useState("");
@@ -58,6 +59,7 @@ function CodeEditor() {
 
       setCode(fileContent);
       setFileName(file.name);
+      onAnalysisComplete?.(null);
 
       toast.success(`${file.name} loaded successfully`);
     };
@@ -72,6 +74,7 @@ function CodeEditor() {
   const handleClearCode = () => {
     setCode("");
     setFileName("");
+    onAnalysisComplete?.(null);
 
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -81,22 +84,33 @@ function CodeEditor() {
   };
 
   const handleAnalyzeCode = async () => {
-  if (!code.trim()) {
-    toast.error("Please paste or upload JavaScript code");
-    return;
-  }
+    if (!code.trim()) {
+      toast.error("Please paste or upload JavaScript code");
+      return;
+    }
 
-  try {
-    setAnalyzing(true);
+    try {
+      setAnalyzing(true);
+      onAnalysisComplete?.(null);
 
-    // Temporary delay until the backend review endpoint is implemented.
-    await new Promise((resolve) => setTimeout(resolve, 800));
+      const response = await analyzeCode({
+        code,
+      });
 
-    toast.success("Code is ready for analysis");
-  } finally {
-    setAnalyzing(false);
-  }
-};
+      onAnalysisComplete?.(response.data.analysis);
+
+      toast.success(response.data.message);
+    } catch (error) {
+      console.error("Analysis failed:", error);
+
+      toast.error(
+        error.response?.data?.message ||
+          "Failed to analyze JavaScript code"
+      );
+    } finally {
+      setAnalyzing(false);
+    }
+  };
 
   return (
     <section className="h-full bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col">
@@ -165,35 +179,36 @@ function CodeEditor() {
               </div>
             </div>
 
-            <div>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".js,application/javascript,text/javascript"
-                onChange={handleFileUpload}
-                className="hidden"
-              />
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".js,application/javascript,text/javascript"
+              onChange={handleFileUpload}
+              className="hidden"
+            />
 
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 transition-colors"
-              >
-                <Upload size={16} />
-                Browse File
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 transition-colors"
+            >
+              <Upload size={16} />
+              Browse File
+            </button>
           </div>
         </div>
       )}
 
       <div className="flex-1 min-h-0 border-b border-slate-200">
-  <Editor
-    height="100%"
+        <Editor
+          height="100%"
           language="javascript"
           theme="vs-dark"
           value={code}
-          onChange={(value) => setCode(value ?? "")}
+          onChange={(value) => {
+            setCode(value ?? "");
+            onAnalysisComplete?.(null);
+          }}
           options={{
             minimap: {
               enabled: true,
@@ -227,19 +242,19 @@ function CodeEditor() {
         </div>
 
         <button
-  type="button"
-  onClick={handleAnalyzeCode}
-  disabled={analyzing}
-  className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition-colors disabled:cursor-not-allowed disabled:bg-blue-400"
->
-  {analyzing ? (
-    <Loader2 size={17} className="animate-spin" />
-  ) : (
-    <Play size={17} />
-  )}
+          type="button"
+          onClick={handleAnalyzeCode}
+          disabled={analyzing}
+          className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition-colors disabled:cursor-not-allowed disabled:bg-blue-400"
+        >
+          {analyzing ? (
+            <Loader2 size={17} className="animate-spin" />
+          ) : (
+            <Play size={17} />
+          )}
 
-  {analyzing ? "Analyzing..." : "Analyze Code"}
-</button>
+          {analyzing ? "Analyzing..." : "Analyze Code"}
+        </button>
       </div>
     </section>
   );
