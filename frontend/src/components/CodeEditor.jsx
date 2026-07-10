@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Editor from "@monaco-editor/react";
 import { analyzeCode } from "../services/reviewService";
+
 import {
   ClipboardPaste,
   Upload,
@@ -9,6 +10,7 @@ import {
   Play,
   Loader2,
 } from "lucide-react";
+
 import toast from "react-hot-toast";
 
 const DEFAULT_CODE = `// Paste your JavaScript code here
@@ -18,7 +20,10 @@ function hello() {
 }
 `;
 
-function CodeEditor({ onAnalysisComplete, selectedCode }) {
+function CodeEditor({
+  onAnalysisComplete,
+  selectedCode,
+}) {
   const [code, setCode] = useState(DEFAULT_CODE);
   const [inputMode, setInputMode] = useState("paste");
   const [fileName, setFileName] = useState("");
@@ -26,19 +31,15 @@ function CodeEditor({ onAnalysisComplete, selectedCode }) {
 
   const fileInputRef = useRef(null);
 
+  // Load saved review code into Monaco Editor
+  // when View is clicked in Review History.
   useEffect(() => {
-  if (typeof selectedCode !== "string") {
-    return;
-  }
-
-  setCode(selectedCode);
-  setInputMode("paste");
-  setFileName("");
-
-  if (fileInputRef.current) {
-    fileInputRef.current.value = "";
-  }
-}, [selectedCode]);
+    if (typeof selectedCode === "string") {
+      setCode(selectedCode);
+      setFileName("");
+      setInputMode("paste");
+    }
+  }, [selectedCode]);
 
   const handleModeChange = (mode) => {
     setInputMode(mode);
@@ -57,7 +58,9 @@ function CodeEditor({ onAnalysisComplete, selectedCode }) {
 
     if (!file.name.toLowerCase().endsWith(".js")) {
       toast.error("Only JavaScript (.js) files are supported");
+
       event.target.value = "";
+
       return;
     }
 
@@ -68,11 +71,14 @@ function CodeEditor({ onAnalysisComplete, selectedCode }) {
 
       if (typeof fileContent !== "string") {
         toast.error("Unable to read the selected file");
+
         return;
       }
 
       setCode(fileContent);
       setFileName(file.name);
+
+      // Clear previous static and AI results.
       onAnalysisComplete?.(null);
 
       toast.success(`${file.name} loaded successfully`);
@@ -88,6 +94,8 @@ function CodeEditor({ onAnalysisComplete, selectedCode }) {
   const handleClearCode = () => {
     setCode("");
     setFileName("");
+
+    // Clear previous static and AI results.
     onAnalysisComplete?.(null);
 
     if (fileInputRef.current) {
@@ -100,18 +108,29 @@ function CodeEditor({ onAnalysisComplete, selectedCode }) {
   const handleAnalyzeCode = async () => {
     if (!code.trim()) {
       toast.error("Please paste or upload JavaScript code");
+
       return;
     }
 
     try {
       setAnalyzing(true);
+
+      // Clear old results while new analysis is running.
       onAnalysisComplete?.(null);
 
+      // Wait for backend response before using response.
       const response = await analyzeCode({
         code,
       });
 
-      onAnalysisComplete?.(response.data.analysis);
+      console.log("Analysis response:", response.data);
+
+      // Send static analysis and Gemini AI review
+      // together to Dashboard.
+      onAnalysisComplete?.({
+        analysis: response.data.analysis,
+        aiReview: response.data.aiReview,
+      });
 
       toast.success(response.data.message);
     } catch (error) {
@@ -127,8 +146,8 @@ function CodeEditor({ onAnalysisComplete, selectedCode }) {
   };
 
   return (
-    <section className="h-full bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col">
-      <div className="px-6 py-5 border-b border-slate-200">
+    <section className="h-full overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm flex flex-col">
+      <div className="border-b border-slate-200 px-6 py-5">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="text-sm font-medium text-blue-600">
@@ -155,6 +174,7 @@ function CodeEditor({ onAnalysisComplete, selectedCode }) {
               }`}
             >
               <ClipboardPaste size={17} />
+
               Paste Code
             </button>
 
@@ -168,6 +188,7 @@ function CodeEditor({ onAnalysisComplete, selectedCode }) {
               }`}
             >
               <Upload size={17} />
+
               Upload File
             </button>
           </div>
@@ -175,11 +196,14 @@ function CodeEditor({ onAnalysisComplete, selectedCode }) {
       </div>
 
       {inputMode === "upload" && (
-        <div className="px-6 py-4 border-b border-slate-200 bg-slate-50">
+        <div className="border-b border-slate-200 bg-slate-50 px-6 py-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
-                <FileCode2 size={20} className="text-blue-600" />
+            <div className="flex min-w-0 items-center gap-3">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100">
+                <FileCode2
+                  size={20}
+                  className="text-blue-600"
+                />
               </div>
 
               <div className="min-w-0">
@@ -204,16 +228,17 @@ function CodeEditor({ onAnalysisComplete, selectedCode }) {
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 transition-colors"
+              className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100"
             >
               <Upload size={16} />
+
               Browse File
             </button>
           </div>
         </div>
       )}
 
-      <div className="flex-1 min-h-0 border-b border-slate-200">
+      <div className="min-h-0 flex-1 border-b border-slate-200">
         <Editor
           height="100%"
           language="javascript"
@@ -221,6 +246,8 @@ function CodeEditor({ onAnalysisComplete, selectedCode }) {
           value={code}
           onChange={(value) => {
             setCode(value ?? "");
+
+            // Clear results when user edits code.
             onAnalysisComplete?.(null);
           }}
           options={{
@@ -237,14 +264,15 @@ function CodeEditor({ onAnalysisComplete, selectedCode }) {
         />
       </div>
 
-      <div className="px-6 py-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={handleClearCode}
-            className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-slate-600 hover:text-red-600 hover:bg-red-50 transition-colors"
+            className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-red-50 hover:text-red-600"
           >
             <Trash2 size={17} />
+
             Clear Code
           </button>
 
@@ -259,10 +287,13 @@ function CodeEditor({ onAnalysisComplete, selectedCode }) {
           type="button"
           onClick={handleAnalyzeCode}
           disabled={analyzing}
-          className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition-colors disabled:cursor-not-allowed disabled:bg-blue-400"
+          className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-400"
         >
           {analyzing ? (
-            <Loader2 size={17} className="animate-spin" />
+            <Loader2
+              size={17}
+              className="animate-spin"
+            />
           ) : (
             <Play size={17} />
           )}

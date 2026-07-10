@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import CodeEditor from "../components/CodeEditor";
 import Navbar from "../components/Navbar";
 import AnalysisResults from "../components/AnalysisResults";
+import AIReviewResults from "../components/AIReviewResults";
 import ReviewHistory from "../components/ReviewHistory";
 
 import {
@@ -14,6 +15,7 @@ import {
 
 function Dashboard() {
   const [analysis, setAnalysis] = useState(null);
+  const [aiReview, setAiReview] = useState(null);
   const [selectedCode, setSelectedCode] = useState(null);
 
   const [reviews, setReviews] = useState([]);
@@ -28,7 +30,7 @@ function Dashboard() {
 
       const response = await getReviewHistory();
 
-      setReviews(response.data.reviews);
+      setReviews(response.data.reviews ?? []);
     } catch (error) {
       console.error("Failed to load review history:", error);
 
@@ -45,42 +47,81 @@ function Dashboard() {
     fetchReviewHistory();
   }, [fetchReviewHistory]);
 
-  // Receives analysis after new code is analyzed
-  const handleAnalysisComplete = async (newAnalysis) => {
-    setAnalysis(newAnalysis);
-
-    // A successful new analysis means we are no longer
-    // viewing an old saved review.
-    if (newAnalysis) {
-      setSelectedReviewId(null);
-      setSelectedCode(null);
-
-      await fetchReviewHistory();
+  const handleAnalysisComplete = async (result) => {
+    if (!result) {
+      setAnalysis(null);
+      setAiReview(null);
+      return;
     }
+
+    /*
+      New CodeEditor format:
+
+      {
+        analysis: {
+          summary: {...},
+          findings: [...]
+        },
+        aiReview: {...}
+      }
+    */
+    if (result.analysis) {
+      setAnalysis(result.analysis);
+      setAiReview(result.aiReview ?? null);
+    } else if (result.summary && Array.isArray(result.findings)) {
+      /*
+        Compatibility with old CodeEditor format:
+
+        {
+          summary: {...},
+          findings: [...]
+        }
+      */
+      setAnalysis(result);
+      setAiReview(null);
+    } else {
+      console.error(
+        "Unexpected analysis result:",
+        result
+      );
+
+      setAnalysis(null);
+      setAiReview(null);
+
+      toast.error("Invalid analysis response");
+
+      return;
+    }
+
+    setSelectedReviewId(null);
+    setSelectedCode(null);
+
+    await fetchReviewHistory();
   };
 
-  // Load a saved review
   const handleViewReview = async (reviewId) => {
     try {
       const response = await getReviewById(reviewId);
 
       const review = response.data.review;
 
-      // Mark this history item as selected
       setSelectedReviewId(review.id);
 
-      // Send saved code to Monaco Editor
       setSelectedCode(review.code);
 
-      // Display saved static analysis results
       setAnalysis({
         summary: {
-          errorCount: review.error_count,
-          warningCount: review.warning_count,
-          totalFindings: review.total_findings,
+          errorCount: review.error_count ?? 0,
+          warningCount: review.warning_count ?? 0,
+          totalFindings: review.total_findings ?? 0,
         },
-        findings: review.findings,
+
+        findings: Array.isArray(review.findings)
+          ? review.findings
+          : [],
       });
+
+      setAiReview(review.ai_review ?? null);
 
       toast.success(`Review #${review.id} loaded`);
     } catch (error) {
@@ -93,7 +134,6 @@ function Dashboard() {
     }
   };
 
-  // Delete a saved review
   const handleDeleteReview = async (reviewId) => {
     const shouldDelete = window.confirm(
       `Delete Review #${reviewId}? This action cannot be undone.`
@@ -108,12 +148,11 @@ function Dashboard() {
 
       await deleteReviewById(reviewId);
 
-      // Clear editor/results if the deleted review
-      // is currently selected.
       if (selectedReviewId === reviewId) {
         setSelectedReviewId(null);
         setSelectedCode(null);
         setAnalysis(null);
+        setAiReview(null);
       }
 
       toast.success("Review deleted successfully");
@@ -144,7 +183,16 @@ function Dashboard() {
             />
           </div>
 
-          <AnalysisResults analysis={analysis} />
+          {analysis?.summary && (
+            <AnalysisResults analysis={analysis} />
+          )}
+
+          {aiReview && (
+            <AIReviewResults
+  analysis={analysis}
+  aiReview={aiReview}
+/>
+          )}
 
           <ReviewHistory
             reviews={reviews}
