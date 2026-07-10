@@ -1,24 +1,15 @@
 import CodeEditor from "../components/CodeEditor";
 import Navbar from "../components/Navbar";
-import WelcomeCard from "../components/WelcomeCard";
 
 function Dashboard() {
   return (
-<>
-  <Navbar />
+    <div className="h-screen bg-slate-50 flex flex-col overflow-hidden">
+      <Navbar />
 
-  <div
-    style={{
-      padding: "30px",
-      background: "#f5f5f5",
-      minHeight: "100vh",
-    }}
-  >
-    <WelcomeCard />
-
-    <CodeEditor />
-  </div>
-</>
+      <main className="flex-1 min-h-0 max-w-7xl w-full mx-auto px-6 py-4">
+        <CodeEditor />
+      </main>
+    </div>
   );
 }
 
