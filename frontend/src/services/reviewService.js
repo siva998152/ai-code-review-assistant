@@ -17,3 +17,15 @@ REVIEW_API.interceptors.request.use((config) => {
 export const analyzeCode = (codeData) => {
   return REVIEW_API.post("/analyze", codeData);
 };
+
+export const getReviewHistory = () => {
+  return REVIEW_API.get("/");
+};
+
+export const getReviewById = (reviewId) => {
+  return REVIEW_API.get(`/${reviewId}`);
+};
+
+export const deleteReviewById = (reviewId) => {
+  return REVIEW_API.delete(`/${reviewId}`);
+};

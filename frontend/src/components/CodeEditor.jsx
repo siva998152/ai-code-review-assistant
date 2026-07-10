@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Editor from "@monaco-editor/react";
 import { analyzeCode } from "../services/reviewService";
 import {
@@ -18,13 +18,27 @@ function hello() {
 }
 `;
 
-function CodeEditor({ onAnalysisComplete }) {
+function CodeEditor({ onAnalysisComplete, selectedCode }) {
   const [code, setCode] = useState(DEFAULT_CODE);
   const [inputMode, setInputMode] = useState("paste");
   const [fileName, setFileName] = useState("");
   const [analyzing, setAnalyzing] = useState(false);
 
   const fileInputRef = useRef(null);
+
+  useEffect(() => {
+  if (typeof selectedCode !== "string") {
+    return;
+  }
+
+  setCode(selectedCode);
+  setInputMode("paste");
+  setFileName("");
+
+  if (fileInputRef.current) {
+    fileInputRef.current.value = "";
+  }
+}, [selectedCode]);
 
   const handleModeChange = (mode) => {
     setInputMode(mode);
