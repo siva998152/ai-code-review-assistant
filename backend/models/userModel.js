@@ -23,6 +23,56 @@ const findUserByEmail = async (email) => {
   return result.rows[0];
 };
 
+const findUserById = async (userId) => {
+  const result = await pool.query(
+    "SELECT * FROM users WHERE id = $1",
+    [userId]
+  );
+
+  return result.rows[0];
+};
+
+const getUserProfile = async (userId) => {
+  const query = `
+    SELECT
+      id,
+      name,
+      email,
+      created_at
+    FROM users
+    WHERE id = $1;
+  `;
+
+  const result = await pool.query(query, [userId]);
+
+  return result.rows[0];
+};
+
+const updateUserProfile = async (
+  userId,
+  name,
+  email
+) => {
+  const query = `
+    UPDATE users
+    SET
+      name = $1,
+      email = $2
+    WHERE id = $3
+    RETURNING
+      id,
+      name,
+      email,
+      created_at;
+  `;
+
+  const values = [name, email, userId];
+
+  const result = await pool.query(query, values);
+
+  return result.rows[0];
+};
+
 const updateUserPassword = async (userId, hashedPassword) => {
   const query = `
     UPDATE users
@@ -41,5 +91,8 @@ const updateUserPassword = async (userId, hashedPassword) => {
 module.exports = {
   createUser,
   findUserByEmail,
+  findUserById,
+  getUserProfile,
+  updateUserProfile,
   updateUserPassword,
 };

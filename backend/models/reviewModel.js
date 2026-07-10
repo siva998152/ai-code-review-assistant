@@ -1,6 +1,11 @@
 const pool = require("../config/db");
 
-const createReview = async (userId, code, analysis) => {
+const createReview = async (
+  userId,
+  code,
+  analysis,
+  aiReview
+) => {
   const query = `
     INSERT INTO reviews (
       user_id,
@@ -8,9 +13,10 @@ const createReview = async (userId, code, analysis) => {
       error_count,
       warning_count,
       total_findings,
-      findings
+      findings,
+      ai_review
     )
-    VALUES ($1, $2, $3, $4, $5, $6)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
     RETURNING *;
   `;
 
@@ -21,6 +27,7 @@ const createReview = async (userId, code, analysis) => {
     analysis.summary.warningCount,
     analysis.summary.totalFindings,
     JSON.stringify(analysis.findings),
+    JSON.stringify(aiReview),
   ];
 
   const result = await pool.query(query, values);
@@ -89,9 +96,30 @@ const deleteReviewById = async (reviewId, userId) => {
   return result.rows[0];
 };
 
+const getReviewStatistics = async (userId) => {
+  const query = `
+    SELECT
+      COUNT(*)::int AS "totalReviews",
+      COALESCE(SUM(error_count), 0)::int AS "totalErrors",
+      COALESCE(SUM(warning_count), 0)::int AS "totalWarnings",
+      COALESCE(SUM(total_findings), 0)::int AS "totalFindings",
+      ROUND(
+        COALESCE(AVG(total_findings), 0),
+        2
+      ) AS "averageFindings"
+    FROM reviews
+    WHERE user_id = $1;
+  `;
+
+  const result = await pool.query(query, [userId]);
+
+  return result.rows[0];
+};
+
 module.exports = {
   createReview,
   getReviewsByUserId,
   getReviewById,
   deleteReviewById,
+  getReviewStatistics,
 };

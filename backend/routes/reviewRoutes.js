@@ -7,15 +7,18 @@ const {
   getReviewHistory,
   getReviewDetails,
   deleteReview,
+  getReviewStats,
 } = require("../controllers/reviewController");
 
 const authenticateUser = require("../middleware/authMiddleware");
 
+router.post("/analyze", authenticateUser, analyzeCode);
+
 router.get("/", authenticateUser, getReviewHistory);
 
-router.get("/:id", authenticateUser, getReviewDetails);
+router.get("/stats", authenticateUser, getReviewStats);
 
-router.post("/analyze", authenticateUser, analyzeCode);
+router.get("/:id", authenticateUser, getReviewDetails);
 
 router.delete("/:id", authenticateUser, deleteReview);
 
