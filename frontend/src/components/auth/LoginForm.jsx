@@ -82,12 +82,12 @@ const handleSubmit = async (e) => {
         />
 
         <div className="flex justify-end mb-5">
-          <button
-            type="button"
-            className="text-blue-600 hover:underline text-sm"
-          >
-            Forgot Password?
-          </button>
+          <Link
+  to="/forgot-password"
+  className="text-blue-600 hover:underline text-sm"
+>
+  Forgot your password?
+</Link>
         </div>
 
 <Button
