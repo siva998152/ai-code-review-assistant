@@ -29,3 +29,7 @@ export const getReviewById = (reviewId) => {
 export const deleteReviewById = (reviewId) => {
   return REVIEW_API.delete(`/${reviewId}`);
 };
+
+export const getReviewStats = () => {
+  return REVIEW_API.get("/stats");
+};

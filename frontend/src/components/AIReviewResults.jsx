@@ -8,13 +8,12 @@ import {
   Lightbulb,
   Sparkles,
 } from "lucide-react";
+
 import toast from "react-hot-toast";
+
 import { downloadReviewPDF } from "../utils/pdfGenerator";
 
-function AIReviewResults({
-  analysis,
-  aiReview,
-}) {
+function AIReviewResults({ analysis, aiReview }) {
   if (!aiReview) {
     return null;
   }
@@ -27,77 +26,93 @@ function AIReviewResults({
   } = aiReview;
 
   const handleCopyCode = async () => {
+    if (!improvedCode) {
+      toast.error("No improved code available");
+      return;
+    }
+
     try {
       await navigator.clipboard.writeText(improvedCode);
+
       toast.success("Improved code copied");
     } catch (error) {
-      console.error("Failed to copy improved code:", error);
+      console.error(
+        "Failed to copy improved code:",
+        error
+      );
+
       toast.error("Failed to copy improved code");
     }
   };
 
   const handleDownloadCode = () => {
-  if (!improvedCode) {
-    toast.error("No improved code available");
-    return;
-  }
+    if (!improvedCode) {
+      toast.error("No improved code available");
+      return;
+    }
 
-  try {
-    const blob = new Blob([improvedCode], {
-      type: "text/javascript;charset=utf-8",
-    });
+    try {
+      const blob = new Blob([improvedCode], {
+        type: "text/javascript;charset=utf-8",
+      });
 
-    const downloadUrl = URL.createObjectURL(blob);
+      const downloadUrl = URL.createObjectURL(blob);
 
-    const link = document.createElement("a");
+      const link = document.createElement("a");
 
-    link.href = downloadUrl;
-    link.download = "improved-code.js";
+      link.href = downloadUrl;
+      link.download = "improved-code.js";
 
-    document.body.appendChild(link);
+      document.body.appendChild(link);
 
-    link.click();
+      link.click();
 
-    document.body.removeChild(link);
+      document.body.removeChild(link);
 
-    URL.revokeObjectURL(downloadUrl);
+      URL.revokeObjectURL(downloadUrl);
 
-    toast.success("Improved code downloaded");
-  } catch (error) {
-    console.error("Failed to download improved code:", error);
+      toast.success("Improved code downloaded");
+    } catch (error) {
+      console.error(
+        "Failed to download improved code:",
+        error
+      );
 
-    toast.error("Failed to download improved code");
-  }
-};
+      toast.error("Failed to download improved code");
+    }
+  };
 
   const handleDownloadPDF = () => {
-  if (!analysis) {
-    toast.error("No analysis available to download");
-    return;
-  }
+    if (!analysis) {
+      toast.error("No analysis available to download");
+      return;
+    }
 
-  try {
-    downloadReviewPDF({
-      analysis,
-      aiReview,
-    });
+    try {
+      downloadReviewPDF({
+        analysis,
+        aiReview,
+      });
 
-    toast.success("PDF downloaded");
-  } catch (error) {
-    console.error("Failed to download PDF:", error);
+      toast.success("PDF downloaded");
+    } catch (error) {
+      console.error(
+        "Failed to download PDF:",
+        error
+      );
 
-    toast.error("Failed to download PDF");
-  }
-};
-
-  toast.success("PDF downloaded");
-};
+      toast.error("Failed to download PDF");
+    }
+  };
 
   return (
     <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
       <div className="flex items-start gap-3">
         <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-violet-100">
-          <Sparkles size={20} className="text-violet-600" />
+          <Sparkles
+            size={20}
+            className="text-violet-600"
+          />
         </div>
 
         <div>
@@ -110,7 +125,8 @@ function AIReviewResults({
           </h2>
 
           <p className="mt-1 text-sm text-slate-500">
-            AI-generated explanations, recommendations, and improved code.
+            AI-generated explanations, recommendations, and
+            improved code.
           </p>
         </div>
       </div>
@@ -145,8 +161,8 @@ function AIReviewResults({
                   </h4>
 
                   <p className="mt-1 text-sm text-green-700">
-                    The AI review did not identify additional issues requiring
-                    explanation.
+                    The AI review did not identify additional
+                    issues requiring explanation.
                   </p>
                 </div>
               </div>
@@ -154,8 +170,11 @@ function AIReviewResults({
           ) : (
             <div className="space-y-3">
               {issues.map((issue, index) => {
-                const isError = issue.severity === "error";
-                const isWarning = issue.severity === "warning";
+                const isError =
+                  issue.severity === "error";
+
+                const isWarning =
+                  issue.severity === "warning";
 
                 return (
                   <article
@@ -220,7 +239,10 @@ function AIReviewResults({
 
       <div className="mt-6">
         <div className="flex items-center gap-2">
-          <Lightbulb size={20} className="text-blue-600" />
+          <Lightbulb
+            size={20}
+            className="text-blue-600"
+          />
 
           <h3 className="text-lg font-bold text-slate-900">
             Suggestions
@@ -254,7 +276,10 @@ function AIReviewResults({
       <div className="mt-6 overflow-hidden rounded-xl border border-slate-200">
         <div className="flex flex-col gap-3 border-b border-slate-200 bg-slate-50 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
-            <Code2 size={19} className="text-violet-600" />
+            <Code2
+              size={19}
+              className="text-violet-600"
+            />
 
             <h3 className="font-semibold text-slate-900">
               Improved Code
@@ -262,36 +287,36 @@ function AIReviewResults({
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-  <button
-    type="button"
-    onClick={handleDownloadPDF}
-    disabled={!analysis}
-    className="inline-flex items-center justify-center gap-2 rounded-lg border border-blue-300 bg-blue-50 px-3 py-2 text-sm font-medium text-blue-700 transition-colors hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50"
-  >
-    <Download size={16} />
-    Download PDF
-  </button>
+            <button
+              type="button"
+              onClick={handleDownloadPDF}
+              disabled={!analysis}
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-blue-300 bg-blue-50 px-3 py-2 text-sm font-medium text-blue-700 transition-colors hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <Download size={16} />
+              Download PDF
+            </button>
 
-  <button
-    type="button"
-    onClick={handleCopyCode}
-    disabled={!improvedCode}
-    className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
-  >
-    <Copy size={16} />
-    Copy Code
-  </button>
+            <button
+              type="button"
+              onClick={handleCopyCode}
+              disabled={!improvedCode}
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <Copy size={16} />
+              Copy Code
+            </button>
 
-  <button
-    type="button"
-    onClick={handleDownloadCode}
-    disabled={!improvedCode}
-    className="inline-flex items-center justify-center gap-2 rounded-lg bg-violet-600 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50"
-  >
-    <Download size={16} />
-    Download JS
-  </button>
-</div>
+            <button
+              type="button"
+              onClick={handleDownloadCode}
+              disabled={!improvedCode}
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-violet-600 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <Download size={16} />
+              Download JS
+            </button>
+          </div>
         </div>
 
         <pre className="max-h-[500px] overflow-auto bg-slate-950 p-5 text-sm leading-6 text-slate-100">
@@ -300,5 +325,6 @@ function AIReviewResults({
       </div>
     </section>
   );
-  
+}
+
 export default AIReviewResults;
