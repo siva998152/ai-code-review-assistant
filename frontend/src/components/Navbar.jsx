@@ -1,5 +1,5 @@
-import { Code2, LogOut } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Code2, LayoutDashboard, User, LogOut } from "lucide-react";
+import { NavLink, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 function Navbar() {
@@ -16,32 +16,61 @@ function Navbar() {
     navigate("/login");
   };
 
+  const navLinkClass = ({ isActive }) =>
+    `flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+      isActive
+        ? "bg-slate-800 text-white"
+        : "text-slate-300 hover:bg-slate-800 hover:text-white"
+    }`;
+
   return (
-    <nav className="h-16 bg-slate-900 border-b border-slate-800">
-      <div className="max-w-7xl mx-auto h-full px-6 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="bg-blue-600 p-2 rounded-lg">
+    <nav className="border-b border-slate-800 bg-slate-900">
+      <div className="mx-auto flex min-h-16 max-w-7xl flex-wrap items-center justify-between gap-4 px-6 py-2">
+        <button
+          type="button"
+          onClick={() => navigate("/dashboard")}
+          className="flex items-center gap-3 text-left"
+        >
+          <div className="rounded-lg bg-blue-600 p-2">
             <Code2 size={22} className="text-white" />
           </div>
 
           <div>
-            <h1 className="text-white font-semibold text-lg leading-tight">
+            <h1 className="text-lg font-semibold leading-tight text-white">
               AI Code Review Assistant
             </h1>
 
-            <p className="text-slate-400 text-xs">
+            <p className="text-xs text-slate-400">
               JavaScript Review Platform
             </p>
           </div>
-        </div>
+        </button>
 
-        <div className="flex items-center gap-5">
-          <div className="hidden sm:block text-right">
-            <p className="text-white text-sm font-medium">
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          <NavLink
+            to="/dashboard"
+            className={navLinkClass}
+          >
+            <LayoutDashboard size={17} />
+            Dashboard
+          </NavLink>
+
+          <NavLink
+            to="/profile"
+            className={navLinkClass}
+          >
+            <User size={17} />
+            Profile
+          </NavLink>
+
+          <div className="mx-2 hidden h-8 w-px bg-slate-700 md:block" />
+
+          <div className="hidden text-right sm:block">
+            <p className="text-sm font-medium text-white">
               {user?.name || "Developer"}
             </p>
 
-            <p className="text-slate-400 text-xs">
+            <p className="text-xs text-slate-400">
               {user?.email || ""}
             </p>
           </div>
@@ -49,7 +78,7 @@ function Navbar() {
           <button
             type="button"
             onClick={handleLogout}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
+            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-300 transition-colors hover:bg-slate-800 hover:text-white"
           >
             <LogOut size={17} />
             Logout
