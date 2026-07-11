@@ -347,15 +347,31 @@ Sensitive environment files such as `.env` are excluded from Git.
 
 ## Screenshots
 
-Screenshots of the authentication pages, dashboard, code analysis results, AI review results, review history, PDF report, and profile page can be added here.
+## Screenshots
 
-Example:
-
-```markdown
 ### Dashboard
 
+Overview of review analytics and the JavaScript code editor.
+
 ![Dashboard](docs/screenshots/dashboard.png)
-```
+
+### Static Analysis Results
+
+Static analysis summary and detailed JavaScript findings.
+
+![Static Analysis Results](docs/screenshots/analysis-results.png)
+
+### AI Review Results
+
+AI-generated overview, issue explanations, suggestions, and improved code.
+
+![AI Review Results](docs/screenshots/ai-review.png)
+
+### Account Management
+
+User profile management and password change functionality.
+
+![Account Management](docs/screenshots/profile.png)
 
 ## Author
 
