@@ -36,11 +36,59 @@ function AIReviewResults({
     }
   };
 
+  const handleDownloadCode = () => {
+  if (!improvedCode) {
+    toast.error("No improved code available");
+    return;
+  }
+
+  try {
+    const blob = new Blob([improvedCode], {
+      type: "text/javascript;charset=utf-8",
+    });
+
+    const downloadUrl = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+
+    link.href = downloadUrl;
+    link.download = "improved-code.js";
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(downloadUrl);
+
+    toast.success("Improved code downloaded");
+  } catch (error) {
+    console.error("Failed to download improved code:", error);
+
+    toast.error("Failed to download improved code");
+  }
+};
+
   const handleDownloadPDF = () => {
-  downloadReviewPDF({
-    analysis,
-    aiReview,
-  });
+  if (!analysis) {
+    toast.error("No analysis available to download");
+    return;
+  }
+
+  try {
+    downloadReviewPDF({
+      analysis,
+      aiReview,
+    });
+
+    toast.success("PDF downloaded");
+  } catch (error) {
+    console.error("Failed to download PDF:", error);
+
+    toast.error("Failed to download PDF");
+  }
+};
 
   toast.success("PDF downloaded");
 };
@@ -213,11 +261,12 @@ function AIReviewResults({
             </h3>
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex flex-wrap items-center gap-2">
   <button
     type="button"
     onClick={handleDownloadPDF}
-    className="inline-flex items-center gap-2 rounded-lg border border-blue-300 bg-blue-50 px-3 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
+    disabled={!analysis}
+    className="inline-flex items-center justify-center gap-2 rounded-lg border border-blue-300 bg-blue-50 px-3 py-2 text-sm font-medium text-blue-700 transition-colors hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50"
   >
     <Download size={16} />
     Download PDF
@@ -227,10 +276,20 @@ function AIReviewResults({
     type="button"
     onClick={handleCopyCode}
     disabled={!improvedCode}
-    className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 disabled:opacity-50"
+    className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
   >
     <Copy size={16} />
     Copy Code
+  </button>
+
+  <button
+    type="button"
+    onClick={handleDownloadCode}
+    disabled={!improvedCode}
+    className="inline-flex items-center justify-center gap-2 rounded-lg bg-violet-600 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50"
+  >
+    <Download size={16} />
+    Download JS
   </button>
 </div>
         </div>
@@ -241,6 +300,5 @@ function AIReviewResults({
       </div>
     </section>
   );
-}
-
+  
 export default AIReviewResults;
