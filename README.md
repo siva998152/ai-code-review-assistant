@@ -414,6 +414,7 @@ Through this project, I strengthened my understanding of:
 
 # 📸 Screenshots
 
+<<<<<<< HEAD
 > **Add screenshots here before final submission.**
 
 Suggested screenshots:
@@ -465,6 +466,92 @@ https://github.com/siva998152
 
 🚀 Future enhancements are planned for upcoming versions.
 
+=======
+## 📸 Login Page
+
+![Login](screenshots/login.png)
+
+---
+
+## 📸 Register Page
+
+![Register](screenshots/register.png)
+
+---
+
+## 📸 Dashboard
+
+![Dashboard](screenshots/dashboard.png)
+
+---
+
+## 📸 Static Analysis
+
+![Static Analysis](screenshots/static-analysis.png)
+
+---
+
+## 📸 AI Review
+
+![AI Review](screenshots/ai-review.png)
+
+---
+
+## 📸 Review History
+
+![History](screenshots/history.png)
+
+---
+
+## 📸 Profile
+
+![Profile](screenshots/profile.png)
+
+---
+
+## 📸 PDF Report
+
+![PDF](screenshots/pdf-report.png)
+![PDF](screenshots/pdf-report(2).png)
+---
+
+# 👨‍💻 Author
+
+**V. Siva Mallesh**
+
+Computer Science & Engineering Student
+
+Passionate about **Full-Stack Development, Cloud Computing, and Artificial Intelligence**.
+
+**GitHub:**
+https://github.com/siva998152
+
+**LinkedIn:**
+(Add your LinkedIn Profile)
+
+---
+
+# 📌 Project Status
+
+✅ Authentication Completed
+
+✅ Profile Management Completed
+
+✅ AI Review Completed
+
+✅ ESLint Static Analysis Completed
+
+✅ Dashboard Analytics Completed
+
+✅ Review History Completed
+
+✅ PDF Export Completed
+
+✅ Deployment Completed
+
+🚀 Future enhancements are planned for upcoming versions.
+
+>>>>>>> 45992cc (Added README screenshots)
 ---
 
 # ☁️ Deployment
