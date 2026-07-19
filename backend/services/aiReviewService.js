@@ -15,45 +15,34 @@ const reviewCodeWithAI = async (
   staticAnalysis
 ) => {
   const prompt = `
-You are a senior JavaScript code reviewer.
-
-Review the JavaScript code and static-analysis findings provided below.
+You are an expert JavaScript reviewer.
 
 Return ONLY valid JSON.
-Do not use markdown code fences.
-Do not include any explanation before or after the JSON.
-
-Use exactly this structure:
 
 {
-  "overview": "Short overall assessment of the code",
-  "issues": [
+  "overview":"",
+  "issues":[
     {
-      "title": "Issue title",
-      "explanation": "Clear explanation of the issue",
-      "severity": "error | warning | suggestion",
-      "line": 1
+      "title":"",
+      "explanation":"",
+      "severity":"",
+      "line":0
     }
   ],
-  "suggestions": [
-    "Specific improvement suggestion"
-  ],
-  "improvedCode": "Complete improved JavaScript code"
+  "suggestions":[],
+  "improvedCode":""
 }
 
-If there are no issues return an empty issues array.
-If there are no suggestions return an empty suggestions array.
-
-JavaScript Code:
+Review this JavaScript code:
 
 ${code}
 
-Static Analysis:
+Static Findings:
 
-${JSON.stringify(staticAnalysis.findings, null, 2)}
+${JSON.stringify(staticAnalysis.findings)}
 `;
 
-  const MAX_RETRIES = 3;
+  const MAX_RETRIES = 1;
 
   for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
     try {
@@ -99,15 +88,7 @@ ${JSON.stringify(staticAnalysis.findings, null, 2)}
         (status === 503 || status === 429) &&
         attempt < MAX_RETRIES
       ) {
-        const waitTime = Math.pow(2, attempt) * 1000;
-
-        console.log(
-          `Retrying in ${waitTime / 1000} seconds...`
-        );
-
-        await delay(waitTime);
-
-        continue;
+        
       }
 
       // JSON parsing error

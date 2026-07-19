@@ -25,6 +25,15 @@ const register = async (req, res) => {
       });
     }
 
+    const nameRegex = /^[A-Za-z\s]+$/;
+
+if (!nameRegex.test(name.trim())) {
+  return res.status(400).json({
+    success: false,
+    message: "Name should contain only alphabets.",
+  });
+}
+
     // Check if email already exists
     const existingUser = await findUserByEmail(email);
 
@@ -296,10 +305,21 @@ const updateProfile = async (req, res) => {
   try {
     const { name, email } = req.body;
 
+    // Check required fields
     if (!name || !email) {
       return res.status(400).json({
         success: false,
         message: "Name and email are required",
+      });
+    }
+
+    // Validate name
+    const nameRegex = /^[A-Za-z\s]+$/;
+
+    if (!nameRegex.test(name.trim())) {
+      return res.status(400).json({
+        success: false,
+        message: "Name should contain only alphabets.",
       });
     }
 
@@ -326,6 +346,7 @@ const updateProfile = async (req, res) => {
       message: "Profile updated successfully",
       user: updatedUser,
     });
+
   } catch (error) {
     console.error(error);
 

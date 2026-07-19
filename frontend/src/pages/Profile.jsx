@@ -65,13 +65,24 @@ function Profile() {
   }, []);
 
   const handleInputChange = (event) => {
-    const { name, value } = event.target;
+  const { name, value } = event.target;
+
+  if (name === "name") {
+    const filteredValue = value.replace(/[^A-Za-z\s]/g, "");
 
     setFormData((currentData) => ({
       ...currentData,
-      [name]: value,
+      [name]: filteredValue,
     }));
-  };
+
+    return;
+  }
+
+  setFormData((currentData) => ({
+    ...currentData,
+    [name]: value,
+  }));
+};
 
   const handleStartEditing = () => {
     setFormData({

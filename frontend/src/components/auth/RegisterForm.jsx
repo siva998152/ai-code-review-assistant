@@ -26,6 +26,13 @@ function RegisterForm() {
       return;
     }
 
+    const nameRegex = /^[A-Za-z\s]+$/;
+
+if (!nameRegex.test(name.trim())) {
+  toast.error("Name should contain only alphabets.");
+  return;
+}
+
     if (password !== confirmPassword) {
       toast.error("Passwords do not match");
       return;
@@ -69,11 +76,13 @@ function RegisterForm() {
 
       <form onSubmit={handleSubmit}>
         <Input
-          label="Full Name"
-          placeholder="Enter your full name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+  label="Full Name"
+  placeholder="Enter your full name"
+  value={name}
+  onChange={(e) =>
+    setName(e.target.value.replace(/[^A-Za-z\s]/g, ""))
+  }
+/>
 
         <Input
           label="Email Address"
