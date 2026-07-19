@@ -1,178 +1,234 @@
-# AI Code Review Assistant
+# 🚀 AI Code Review Assistant
 
-AI Code Review Assistant is a full-stack web application that analyzes JavaScript code using static analysis and AI-assisted review.
+An AI-powered full-stack web application that analyzes **JavaScript** code using **ESLint** for static analysis and **Google Gemini AI** for intelligent code review.
 
-The application helps developers identify code issues, understand warnings, receive improvement suggestions, generate improved code, manage previous reviews, view review analytics, and export review results.
+The application helps developers identify code issues, understand warnings, receive AI-powered improvement suggestions, generate optimized code, manage previous reviews, visualize review statistics, and export detailed review reports.
 
-## Features
+---
 
-### Authentication and Account Management
+## 🌐 Live Demo
 
-- User registration and login
-- JWT-based authentication
-- Protected routes
-- Forgot password and reset password flow
-- View user profile
-- Edit profile information
-- Change password
-- Logout
+**Frontend:**
+https://ai-code-review-assistant-beige-sigma.vercel.app/
 
-### JavaScript Code Review
+**Backend API:**
+https://ai-code-review-assistant-yyly.onrender.com/
 
-- Write or paste JavaScript code using an integrated code editor
-- Upload `.js` files for review
-- Static code analysis
-- Error and warning detection
-- Rule information and issue locations
-- AI-assisted explanations
-- AI-generated suggestions
-- Improved JavaScript code generation
+**Health Check:**
+https://ai-code-review-assistant-yyly.onrender.com/api/health
 
-### Review Management
+---
 
-- Automatically save code reviews
-- View review history
-- Open previous reviews
-- Delete reviews
-- User-specific review data
+# ✨ Key Highlights
 
-### Dashboard Analytics
+* 🤖 AI-powered JavaScript code review
+* 🔍 ESLint-based static code analysis
+* 🔐 Secure JWT Authentication
+* 👤 User Profile Management
+* 📂 JavaScript File Upload Support
+* 📊 Dashboard Analytics
+* 📝 AI-generated Code Explanation
+* 💡 Best Practice Recommendations
+* ⚡ Performance & Security Suggestions
+* 📄 PDF Report Generation
+* 📋 Review History Management
+* 🗄 PostgreSQL Database Integration
+* ☁️ Fully Deployed Application
+
+---
+
+# 📖 Project Overview
+
+Writing clean, secure, and maintainable code is one of the most important aspects of software development. However, manual code reviews can be time-consuming and developers may unintentionally overlook bugs, security risks, or performance issues.
+
+The **AI Code Review Assistant** automates this process by combining **ESLint static analysis** with **Google Gemini AI** to provide instant, detailed, and easy-to-understand code reviews.
+
+The system not only identifies issues but also explains why they occur, recommends best practices, generates improved code, and stores review history for future reference.
+
+---
+
+# ✨ Features
+
+## 🔐 Authentication & Account Management
+
+* User Registration
+* Secure Login
+* JWT Authentication
+* Protected Routes
+* Forgot Password
+* Reset Password
+* View Profile
+* Update Profile
+* Change Password
+* Logout
+
+---
+
+## 💻 JavaScript Code Review
+
+* Integrated Code Editor
+* Paste JavaScript Code
+* Upload `.js` Files
+* ESLint Static Analysis
+* Error Detection
+* Warning Detection
+* Rule Information
+* Issue Locations
+* AI Code Explanation
+* AI Suggestions
+* Refactored JavaScript Code
+* Overall Code Quality Review
+
+---
+
+## 📂 Review Management
+
+* Automatically Save Reviews
+* View Previous Reviews
+* Open Previous Reviews
+* Delete Reviews
+* User-specific Review History
+
+---
+
+## 📊 Dashboard Analytics
 
 The dashboard displays:
 
-- Total Reviews
-- Total Findings
-- Total Errors
-- Total Warnings
+* Total Reviews
+* Total Findings
+* Total Errors
+* Total Warnings
 
-Statistics automatically refresh when reviews are created or deleted.
+Statistics update automatically whenever reviews are created or deleted.
 
-### Export Features
+---
 
-- Copy improved code to clipboard
-- Download improved code as a `.js` file
-- Generate PDF review reports
+## 📄 Export Features
 
-PDF reports include:
+* Copy Improved Code
+* Download Improved Code as `.js`
+* Generate PDF Review Reports
 
-- Static analysis summary
-- Static analysis findings
-- AI overview
-- AI issues and explanations
-- AI suggestions
-- Improved code
-- Generation timestamp
-- Multi-page support
-- Page numbers
+Each PDF includes:
 
-## Tech Stack
+* Static Analysis Summary
+* Static Analysis Findings
+* AI Overview
+* AI Issues & Explanations
+* AI Suggestions
+* Improved Code
+* Generation Timestamp
+* Multi-page Support
+* Page Numbers
 
-### Frontend
+---
 
-- React
-- Vite
-- JavaScript
-- Tailwind CSS
-- Axios
-- React Router
-- React Hot Toast
-- Lucide React
-- jsPDF
+# 🛠 Tech Stack
 
-### Backend
+## Frontend
 
-- Node.js
-- Express.js
-- PostgreSQL
-- JWT Authentication
-- bcrypt
-- ESLint-based static analysis
-- Gemini API
+* React
+* Vite
+* JavaScript
+* Tailwind CSS
+* Axios
+* React Router
+* React Hot Toast
+* Lucide React
+* jsPDF
 
-## Application Architecture
+---
+
+## Backend
+
+* Node.js
+* Express.js
+* PostgreSQL
+* JWT Authentication
+* bcrypt
+* ESLint
+* Google Gemini API
+
+---
+
+# 🏗 Application Architecture
 
 ```text
-React Frontend
-      |
-      | HTTP / REST API
-      v
-Express Backend
-      |
-      |----------------------|
-      |                      |
-      v                      v
-PostgreSQL              Review Services
-Database                     |
-                             |--------------------|
-                             |                    |
-                             v                    v
-                     Static Analysis        Gemini AI Review
+                   User
+                     │
+                     ▼
+             React Frontend
+                     │
+             HTTP / REST API
+                     │
+                     ▼
+             Express Backend
+             ┌────────┴────────┐
+             ▼                 ▼
+      PostgreSQL DB     Review Services
+                               │
+                 ┌─────────────┴─────────────┐
+                 ▼                           ▼
+         ESLint Static Analysis     Gemini AI Review
+                               │
+                               ▼
+                     Review Saved in Database
+                               │
+                               ▼
+                  Results Displayed to User
 ```
 
-## Project Structure
+---
+
+# 📁 Project Structure
 
 ```text
 ai-code-review-assistant/
-|
-|-- backend/
-|   |-- config/
-|   |   `-- db.js
-|   |
-|   |-- controllers/
-|   |   |-- authController.js
-|   |   `-- reviewController.js
-|   |
-|   |-- middleware/
-|   |   `-- authMiddleware.js
-|   |
-|   |-- models/
-|   |   |-- reviewModel.js
-|   |   `-- userModel.js
-|   |
-|   |-- routes/
-|   |   |-- authRoutes.js
-|   |   |-- healthRoutes.js
-|   |   `-- reviewRoutes.js
-|   |
-|   |-- services/
-|   |   |-- aiReviewService.js
-|   |   `-- staticAnalysisService.js
-|   |
-|   |-- server.js
-|   `-- package.json
-|
-|-- frontend/
-|   |-- public/
-|   |
-|   |-- src/
-|   |   |-- components/
-|   |   |-- context/
-|   |   |-- pages/
-|   |   |-- services/
-|   |   |-- styles/
-|   |   `-- utils/
-|   |
-|   |-- index.html
-|   |-- vite.config.js
-|   `-- package.json
-|
-`-- README.md
+│
+├── backend/
+│   ├── config/
+│   ├── controllers/
+│   ├── middleware/
+│   ├── models/
+│   ├── routes/
+│   ├── services/
+│   ├── server.js
+│   └── package.json
+│
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── context/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   ├── styles/
+│   │   └── utils/
+│   ├── vite.config.js
+│   └── package.json
+│
+└── README.md
 ```
 
-## Getting Started
+---
 
-### Prerequisites
+# ⚙️ Getting Started
 
-Install the following software before running the project:
+## Prerequisites
 
-- Node.js
-- npm
-- PostgreSQL
-- Git
+Install:
 
-A Gemini API key is required to use the AI-assisted review feature.
+* Node.js
+* npm
+* PostgreSQL
+* Git
 
-## Clone the Repository
+You also need a **Google Gemini API Key**.
+
+---
+
+## Clone Repository
 
 ```bash
 git clone https://github.com/siva998152/ai-code-review-assistant.git
@@ -180,23 +236,17 @@ git clone https://github.com/siva998152/ai-code-review-assistant.git
 cd ai-code-review-assistant
 ```
 
-## Backend Setup
+---
 
-Open the backend directory:
+## Backend Setup
 
 ```bash
 cd backend
-```
 
-Install dependencies:
-
-```bash
 npm install
 ```
 
-Create a `.env` file inside the `backend` directory.
-
-Example:
+Create a `.env` file.
 
 ```env
 PORT=5000
@@ -212,206 +262,226 @@ JWT_SECRET=your_secure_jwt_secret
 GEMINI_API_KEY=your_gemini_api_key
 ```
 
-Do not commit the `.env` file or expose real credentials.
+Never commit your `.env` file.
 
-Start the backend server using the script configured in `backend/package.json`.
-
-For example:
+Start the backend:
 
 ```bash
 npm run dev
 ```
 
-The backend runs locally at:
+Backend runs on:
 
-```text
+```
 http://localhost:5000
 ```
 
-## Frontend Setup
+---
 
-Open another terminal from the project root:
+## Frontend Setup
 
 ```bash
 cd frontend
-```
 
-Install dependencies:
-
-```bash
 npm install
-```
 
-Start the Vite development server:
-
-```bash
 npm run dev
 ```
 
-Open the local URL displayed by Vite in your browser.
+Open the URL displayed by Vite.
 
-## API Overview
+---
 
-### Authentication Routes
+# 🔗 API Overview
 
-```text
-POST   /api/auth/register
-POST   /api/auth/login
-POST   /api/auth/forgot-password
-POST   /api/auth/reset-password
-GET    /api/auth/profile
-PUT    /api/auth/profile
-PUT    /api/auth/change-password
+## Authentication
+
+| Method | Endpoint                  |
+| ------ | ------------------------- |
+| POST   | /api/auth/register        |
+| POST   | /api/auth/login           |
+| POST   | /api/auth/forgot-password |
+| POST   | /api/auth/reset-password  |
+| GET    | /api/auth/profile         |
+| PUT    | /api/auth/profile         |
+| PUT    | /api/auth/change-password |
+
+---
+
+## Reviews
+
+| Method | Endpoint             |
+| ------ | -------------------- |
+| POST   | /api/reviews/analyze |
+| GET    | /api/reviews         |
+| GET    | /api/reviews/stats   |
+| GET    | /api/reviews/:id     |
+| DELETE | /api/reviews/:id     |
+
+Protected endpoints require:
+
 ```
-
-### Review Routes
-
-```text
-POST   /api/reviews/analyze
-GET    /api/reviews
-GET    /api/reviews/stats
-GET    /api/reviews/:id
-DELETE /api/reviews/:id
-```
-
-Protected endpoints require a JWT access token.
-
-Example authorization header:
-
-```text
 Authorization: Bearer <token>
 ```
 
-## Review Workflow
+---
+
+# 🔄 Review Workflow
 
 ```text
 User submits JavaScript code
-            |
-            v
-JWT authentication
-            |
-            v
-Static analysis
-            |
-            v
-Gemini AI review
-            |
-            v
-Review saved to PostgreSQL
-            |
-            v
-Results displayed in dashboard
-            |
-            |----------------------|
-            |                      |
-            v                      v
-Review History               Export Results
-                             PDF / JS / Clipboard
+            │
+            ▼
+JWT Authentication
+            │
+            ▼
+ESLint Static Analysis
+            │
+            ▼
+Gemini AI Review
+            │
+            ▼
+Review Saved in PostgreSQL
+            │
+            ▼
+Results Displayed
+            │
+      ┌─────┴─────┐
+      ▼           ▼
+History      Export Results
+             PDF / JS / Copy
 ```
 
-## Security Practices
+---
 
-The application uses:
+# 🔒 Security
 
-- Password hashing with bcrypt
-- JWT authentication
-- Protected API routes
-- User-specific review queries
-- Environment variables for credentials and API keys
-- Server-side validation
-- Password verification before password changes
+* Password Hashing using bcrypt
+* JWT Authentication
+* Protected API Routes
+* User-specific Database Queries
+* Environment Variables
+* Server-side Validation
+* Password Verification before Change Password
+* Secure API Key Management
 
-Sensitive environment files such as `.env` are excluded from Git.
+---
 
-## Known Limitations
+# 📚 What I Learned
 
-- The application currently analyzes JavaScript only.
-- AI-assisted reviews depend on Gemini API availability.
-- Gemini API quota limits or periods of high demand can temporarily prevent AI review generation.
-- Local development URLs are currently configured in frontend API service files and must be replaced with deployment environment variables before production deployment.
-- The forgot-password implementation currently verifies the account and issues a short-lived reset token through the API; production email delivery is not yet implemented.
+Through this project, I strengthened my understanding of:
 
-## Future Improvements
+* React.js
+* Node.js
+* Express.js
+* PostgreSQL
+* REST APIs
+* JWT Authentication
+* ESLint Integration
+* Google Gemini AI Integration
+* PDF Generation
+* Full-Stack Application Development
+* Deployment using Vercel, Render, and Neon
 
-- Support additional programming languages
-- Email-based password reset delivery
-- OAuth authentication
-- Code syntax highlighting in generated PDF reports
-- Configurable ESLint rules
-- Review search, filtering, and pagination
-- Dashboard charts and trends
-- AI review retry and provider fallback strategies
-- Automated testing
-- Docker support
-- CI/CD pipeline
+---
 
-## Screenshots
+# 🚧 Known Limitations
 
-### Dashboard
+* Supports **JavaScript only**
+* AI reviews depend on Google Gemini API availability
+* API quota limits may temporarily affect review generation
+* Production email delivery for password reset is not yet implemented
+* Frontend environment configuration should be migrated completely to environment variables for production
 
-Overview of review analytics and the JavaScript code editor.
+---
 
-![Dashboard](docs/screenshots/dashboard.png)
+# 🚀 Future Enhancements
 
-### Static Analysis Results
+* Multi-language Support
+* GitHub Repository Integration
+* Email-based Password Reset
+* OAuth Authentication
+* Configurable ESLint Rules
+* Dashboard Charts
+* Search & Filter Reviews
+* Review Pagination
+* AI Retry & Provider Fallback
+* Automated Testing
+* Docker Support
+* CI/CD Pipeline
 
-Static analysis summary and detailed JavaScript findings.
+---
 
-![Static Analysis Results](docs/screenshots/analysis-results.png)
+# 📸 Screenshots
 
-### AI Review Results
+> **Add screenshots here before final submission.**
 
-AI-generated overview, issue explanations, suggestions, and improved code.
+Suggested screenshots:
 
-![AI Review Results](docs/screenshots/ai-review.png)
+* Login Page
+* Register Page
+* Dashboard
+* Static Analysis Results
+* AI Review Results
+* Review History
+* Profile Page
+* PDF Report
 
-### Account Management
+---
 
-User profile management and password change functionality.
+# 👨‍💻 Author
 
-![Account Management](docs/screenshots/profile.png)
+**V. Siva Mallesh**
 
-## Author
+Computer Science & Engineering Student
 
-**V Siva Mallesh**
+Passionate about **Full-Stack Development, Cloud Computing, and Artificial Intelligence**.
 
-- GitHub: `siva998152`
-- Computer Science and Engineering Student
-- Full-Stack and Cloud Development Enthusiast
+**GitHub:**
+https://github.com/siva998152
 
-## Project Status
+**LinkedIn:**
+(Add your LinkedIn Profile)
 
-The main application features are implemented and working locally.
+---
 
-Current remaining work:
+# 📌 Project Status
 
-- Add project screenshots to the repository
-- Configure production environment variables
-- Deploy PostgreSQL database
-- Deploy backend
-- Deploy frontend
-- Perform final production testing
+✅ Authentication Completed
 
-## License
+✅ Profile Management Completed
 
-No license has been added to this repository yet.
+✅ AI Review Completed
 
-## Live Demo
+✅ ESLint Static Analysis Completed
 
-**Frontend Application:**  
-https://ai-code-review-assistant-beige-sigma.vercel.app
+✅ Dashboard Analytics Completed
 
-**Backend API:**  
-https://ai-code-review-assistant-yyly.onrender.com
+✅ Review History Completed
 
-**Health Check:**  
-https://ai-code-review-assistant-yyly.onrender.com/api/health
+✅ PDF Export Completed
 
-## Deployment
+✅ Deployment Completed
 
-The application is deployed using:
+🚀 Future enhancements are planned for upcoming versions.
 
-- Frontend: Vercel
-- Backend: Render
-- PostgreSQL Database: Neon
-- AI Provider: Google Gemini
+---
+
+# ☁️ Deployment
+
+| Service     | Platform        |
+| ----------- | --------------- |
+| Frontend    | Vercel          |
+| Backend     | Render          |
+| Database    | Neon PostgreSQL |
+| AI Provider | Google Gemini   |
+
+---
+
+# 📄 License
+
+This project is currently provided for educational and portfolio purposes.
+
+---
+
+⭐ **If you found this project helpful or interesting, consider giving it a star on GitHub!**
